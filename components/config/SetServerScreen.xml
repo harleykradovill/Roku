@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component name="SetServerScreen" extends="JFScreen">
   <children>
+    <Poster
+      id="background"
+      uri="pkg:/images/bg_login_gradient.png"
+      width="1920"
+      height="1080"
+      translation="[0, 0]" />
+
+    <Rectangle translation="[818, 50]" width="286" height="50" color="0x00000000">
+      <Poster
+        id="logo"
+        uri="pkg:/images/logo.png"
+        width="286"
+        height="50" />
+    </Rectangle>
+
     <LayoutGroup translation="[150,150]" itemSpacings="40">
       <LayoutGroup>
         <Text text="Connect to Server" id="prompt" font="font:LargeBoldSystemFont" />
