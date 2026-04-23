@@ -85,11 +85,11 @@
       <Text
         id="errorMessage"
         text=""
-        font="font:MediumSystemFont"
+        font="font:SmallestSystemFont"
         color="#ff0000FF"
         width="1540"
         horizAlign="center"
-        translation="[40, 520]" />
+        translation="[490, 735]" />
 
       <StandardButton
         id="submit"
@@ -98,6 +98,13 @@
         height="60"
         translation="[685, 420]" />
     </Rectangle>
+
+    <Text
+      id="versionLabel"
+      font="font:SmallestSystemFont"
+      text="Moonfin version x.x.x release"
+      color="#CCCCCC"
+      translation="[786, 719]" />
   </children>
 
   <interface>
