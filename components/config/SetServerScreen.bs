@@ -16,7 +16,8 @@ sub init()
     m.serverUrlOutline.blendColor = "0x00A4DCFF" ' Blue focus
 
     m.serverPickerContainer.color = ColorPalette.TRANSPARENT
-    m.serverUrlContainer.color = ColorPalette.TRANSPARENT
+    m.serverUrlTextbox.backgroundUri = "pkg:/images/transparent.png"
+    m.serverUrlContainer.color = "0x2a2e40FF"
 
     ' Set text input colors
     m.serverUrlTextbox.textColor = ColorPalette.DARKGREY
