@@ -47,8 +47,9 @@
         <TextEditBox
           id="serverUrlTextbox"
           hintText="Enter server address"
-          width="1540"
-          height="60" />
+          width="1520"
+          height="60"
+          translation="[20, 2]" />
         <Poster
           id="serverUrlOutline"
           visible="false"
@@ -102,7 +103,7 @@
   <interface>
     <field id="forgetServer" type="string" />
     <field id="serverUrl" type="string" alias="serverUrlTextbox.text" />
-    <field id="serverWidth" alias="serverUrlOutline.width,serverUrlTextbox.width,serverUrlContainer.width" value="1540" />
+    <field id="serverWidth" alias="serverUrlOutline.width,serverUrlContainer.width" value="1540" />
     <field id="serverHeight" alias="serverUrlOutline.height,serverUrlTextbox.height,serverUrlContainer.height" value="60" />
     <field id="errorMessage" type="string" alias="errorMessage.text" />
   </interface>
