@@ -8,46 +8,56 @@
       height="1080"
       translation="[0, 0]" />
 
-    <Rectangle translation="[818, 70]" width="286" height="50" color="0x00000000">
+    <Rectangle translation="[710, 70]" width="500" height="113" color="0x00000000">
       <Poster
         id="logo"
         uri="pkg:/images/logo.png"
-        width="286"
-        height="50" />
+        width="500"
+        height="113" />
     </Rectangle>
 
     <Rectangle
       id="mainGroup"
-      translation="[150, 200]"
-      width="1620"
-      height="500"
+      translation="[360, 215]"
+      width="1200"
+      height="300"
       color="#2b304473">
 
       <Text
-        id="welcomeTitle"
-        text="Welcome to Moonfin!"
-        font="font:LargeBoldSystemFont"
+        id="discoveredLabel"
+        text="Discovered Servers"
+        font="font:SmallestBoldSystemFont"
         color="#FFFFFFFF"
         translation="[40, 40]" />
 
-      <Text
-        id="subtitle"
-        text="Connect to your server to get started."
-        font="font:SmallerSystemFont"
-        color="#CCCCCC"
-        width="1540"
-        horizAlign="center"
-        translation="[40, 100]" />
+      <Rectangle
+        id="serverPickerContainer"
+        translation="[40, 85]"
+        width="1120"
+        height="220"
+        color="0x00000000"
+        clippingRect="[0, 0, 1120, 220]">
+        <MarkupList
+          id="serverPicker"
+          translation="[0, 0]"
+          drawFocusFeedback="false"
+          itemComponentName="JFServer"
+          focusFootprintBitmapUri=""
+          itemSpacing="[0, 10]"
+          itemSize="[1120, 100]"
+          numRows="2"
+          vertFocusAnimationStyle="floatingFocus" />
+      </Rectangle>
 
       <Rectangle
         id="serverUrlContainer"
-        translation="[40, 150]"
-        width="1540"
+        translation="[40, 720]"
+        width="1120"
         height="60">
         <TextEditBox
           id="serverUrlTextbox"
           hintText="Enter server address"
-          width="1520"
+          width="1120"
           height="60"
           translation="[20, 2]" />
         <Poster
@@ -57,60 +67,46 @@
       </Rectangle>
 
       <Text
-        id="discoveredLabel"
-        text="Discovered servers"
-        font="font:MediumSystemFont"
-        color="#FFFFFFFF"
-        translation="[40, 235]" />
-
-      <Rectangle
-        id="serverPickerContainer"
-        translation="[40, 275]"
-        width="1540"
-        height="220"
-        color="0x00000000"
-        clippingRect="[0, 0, 1540, 220]">
-        <MarkupList
-          id="serverPicker"
-          translation="[0, 0]"
-          drawFocusFeedback="false"
-          itemComponentName="JFServer"
-          focusFootprintBitmapUri=""
-          itemSpacing="[0, 10]"
-          itemSize="[1540, 60]"
-          numRows="2"
-          vertFocusAnimationStyle="floatingFocus" />
-      </Rectangle>
-
-      <Text
         id="errorMessage"
         text=""
         font="font:SmallestSystemFont"
         color="#ff0000FF"
         width="500"
         horizAlign="center"
-        translation="[1010, 438]" />
+        translation="[50, 438]" />
+
+      <StandardButton
+        id="addServerButton"
+        text="Add Server"
+        width="1120"
+        height="50"
+        translation="[40, 220]"
+        background="0x2a2e40FF"
+        color="0xFFFFFFFF"
+        focusBackground="0x00A4DCFF"
+        focusColor="0xFFFFFFFF"
+        fontSize="24" />
 
       <StandardButton
         id="submit"
         text="Submit"
         width="250"
         height="60"
-        translation="[685, 420]" />
+        translation="[910, 790]" />
     </Rectangle>
 
     <Text
       id="versionLabel"
-      font="font:SmallestSystemFont"
-      text="Moonfin version x.x.x release"
+      font="font:TinyBoldSystemFont"
+      text="Moonfin version x.x.x"
       color="#CCCCCC"
-      translation="[786, 719]" />
+      translation="[844, 532]" />
   </children>
 
   <interface>
     <field id="forgetServer" type="string" />
     <field id="serverUrl" type="string" alias="serverUrlTextbox.text" />
-    <field id="serverWidth" alias="serverUrlOutline.width,serverUrlContainer.width" value="1540" />
+    <field id="serverWidth" alias="serverUrlOutline.width,serverUrlContainer.width" value="1120" />
     <field id="serverHeight" alias="serverUrlOutline.height,serverUrlTextbox.height,serverUrlContainer.height" value="60" />
     <field id="errorMessage" type="string" alias="errorMessage.text" />
   </interface>

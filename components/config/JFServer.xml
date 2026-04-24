@@ -7,14 +7,15 @@
   </interface>
 
   <children>
-    <Rectangle id="background" translation="[0,0]" width="1540" height="60" />
+    <Rectangle id="background" translation="[0,0]" width="1120" height="100" />
 
-    <Poster id="poster" translation="[10,10]" width="40" height="40" />
-    <Group id="labels" translation="[120,15]">
-      <Text id="serverInfo" horizAlign="center" font="font:SmallerSystemFont" height="65" width="1320" />
+    <Poster id="poster" translation="[28,28]" width="40" height="40" blendColor="#CCCCCCCC" />
+    <Group id="labels" translation="[100,15]">
+      <Label id="name" horizAlign="left" font="font:SmallestBoldSystemFont" height="65" translation="[0,5]" />
+      <Label id="baseUrl" horizAlign="left" font="font:SmallestSystemFont" height="65" translation="[0,40]" color="#CCCCCCCC" />
     </Group>
 
-    <Rectangle id="trashContainer" translation="[1480,0]" width="60" height="60">
+    <Rectangle id="trashContainer" translation="[500,0]" width="60" height="60">
       <Poster id="trash" width="25" height="25" uri="pkg:/images/icons/trash.png" translation="[18,18]" />
     </Rectangle>
   </children>

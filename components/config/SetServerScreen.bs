@@ -31,8 +31,10 @@ sub init()
     m.submit.focusBackground = "0x00A4DCFF" ' Blue on focus
     m.submit.focusColor = "0xFFFFFFFF" ' White text
 
+    m.addServerButton = m.top.findNode("addServerButton")
+
     if isValid(m.versionLabel)
-        m.versionLabel.text = `Moonfin version ${LCase(m.global.app.version)} release`
+        m.versionLabel.text = `Moonfin version ${LCase(m.global.app.version)}`
     end if
 
     m.top.observeField("serverUrl", "clearErrorMessage")
@@ -73,18 +75,23 @@ function onKeyEvent(key as string, press as boolean) as boolean
     end if
 
     if key = KeyCode.OK
+
         if m.serverPicker.hasFocus()
             selectedServer = m.serverPicker.content.getChild(m.serverPicker.itemFocused)
+
             if chainLookupReturn(selectedServer, "itemHasDeleteFocus", false)
                 m.top.forgetServer = selectedServer.baseUrl
                 return true
             end if
+
             m.top.serverUrl = selectedServer.baseUrl
             m.submit.setFocus(true)
+            m.submit.focus = true
             return true
         end if
 
         if m.submit.hasFocus()
+            ' Let the StandardButton's onKeyEvent handle this - it sets buttonSelected
             return false
         end if
 
@@ -92,48 +99,54 @@ function onKeyEvent(key as string, press as boolean) as boolean
             ShowKeyboard()
             return true
         end if
+
         return false
     end if
 
     if key = KeyCode.DOWN
-        if m.serverUrlContainer.hasFocus()
-            m.serverUrlOutline.visible = false
-            m.serverPicker.setFocus(true)
-            return true
-        end if
-
         if m.serverPicker.hasFocus() and m.serverPicker.content.getChildCount() > 0 and m.serverPicker.itemFocused = m.serverPicker.content.getChildCount() - 1
-            m.submit.setFocus(true)
-            m.submit.focus = true
-            return true
-        end if
-        return false
-    end if
-
-    if key = KeyCode.UP
-        if m.serverPicker.hasFocus() and isValidAndNotEmpty(m.servers)
             m.serverUrlContainer.setFocus(true)
             m.serverUrlOutline.visible = true
             return true
         end if
 
-        if m.submit.hasFocus()
-            m.serverPicker.setFocus(true)
+        if m.serverUrlContainer.hasFocus()
+            m.serverUrlOutline.visible = false
+            m.submit.setFocus(true)
+            m.submit.focus = true
             return true
         end if
+
         return false
     end if
 
-    if key = KeyCode.BACK
-        if m.serverUrlContainer.hasFocus()
+    if key = KeyCode.UP
+        if m.serverUrlContainer.hasFocus() and isValidAndNotEmpty(m.servers)
+            m.serverPicker.setFocus(true)
+            m.serverUrlOutline.visible = false
+            return true
+        end if
+
+        if m.serverUrlContainer.hasFocus() and m.servers.Count() = 0
             ScanForServers()
             m.serverUrlOutline.visible = false
             return true
         end if
 
-        if m.serverPicker.hasFocus() and isValidAndNotEmpty(m.servers)
+        if m.submit.hasFocus()
             m.serverUrlContainer.setFocus(true)
             m.serverUrlOutline.visible = true
+            m.submit.focus = false
+            return true
+        end if
+
+        return false
+    end if
+
+    if key = KeyCode.BACK
+        if m.serverUrlContainer.hasFocus() and isValidAndNotEmpty(m.servers)
+            m.serverUrlOutline.visible = false
+            m.serverPicker.setFocus(true)
             return true
         end if
 
@@ -143,8 +156,18 @@ function onKeyEvent(key as string, press as boolean) as boolean
         end if
 
         if m.submit.hasFocus() and m.servers.Count() = 0
-            m.serverUrlContainer.setFocus(true)
             m.serverUrlOutline.visible = true
+            m.serverUrlContainer.setFocus(true)
+            return true
+        end if
+
+        if m.serverUrlContainer.hasFocus() and m.servers.Count() = 0
+            ScanForServers()
+            return true
+        end if
+
+        if m.serverPicker.hasFocus() and isValidAndNotEmpty(m.servers)
+            ScanForServers()
             return true
         end if
 
@@ -204,10 +227,13 @@ sub ScanForServersComplete(event)
     stopLoadingSpinner()
 
 
-    ' Always start focus at server URL textbox
-    m.serverUrlContainer.setFocus(true)
-    m.serverUrlOutline.visible = true
-
+    'if we have at least one server, focus on the server picker
+    if m.servers.Count() > 0
+        m.serverPicker.setFocus(true)
+        'no servers found...focus on the add server button
+    else
+        m.addServerButton.setFocus(true)
+    end if
 end sub
 
 sub ShowKeyboard()
