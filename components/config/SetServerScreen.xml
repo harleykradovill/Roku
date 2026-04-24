@@ -20,7 +20,7 @@
       id="mainGroup"
       translation="[360, 215]"
       width="1200"
-      height="300"
+      height="420"
       color="#2b304473">
 
       <Text
@@ -49,11 +49,25 @@
           vertFocusAnimationStyle="floatingFocus" />
       </Rectangle>
 
+      <StandardButton
+        id="addServerButton"
+        text="Add Server"
+        width="1120"
+        height="50"
+        translation="[40, 320]"
+        background="0x2a2e40FF"
+        color="0xFFFFFFFF"
+        focusBackground="0x00A4DCFF"
+        focusColor="0xFFFFFFFF"
+        fontSize="24" />
+
       <Rectangle
         id="serverUrlContainer"
-        translation="[40, 720]"
+        visible="false"
+        translation="[40, 105]"
         width="1120"
-        height="60">
+        height="60"
+        color="0x2a2e40FF">
         <TextEditBox
           id="serverUrlTextbox"
           hintText="Enter server address"
@@ -66,21 +80,13 @@
           uri="pkg:/images/hd_focus.9.png" />
       </Rectangle>
 
-      <Text
-        id="errorMessage"
-        text=""
-        font="font:SmallestSystemFont"
-        color="#ff0000FF"
-        width="500"
-        horizAlign="center"
-        translation="[50, 438]" />
-
       <StandardButton
-        id="addServerButton"
-        text="Add Server"
-        width="1120"
+        id="connectButton"
+        text="Connect"
+        visible="false"
+        width="550"
         height="50"
-        translation="[40, 220]"
+        translation="[610, 195]"
         background="0x2a2e40FF"
         color="0xFFFFFFFF"
         focusBackground="0x00A4DCFF"
@@ -88,11 +94,26 @@
         fontSize="24" />
 
       <StandardButton
-        id="submit"
-        text="Submit"
-        width="250"
-        height="60"
-        translation="[910, 790]" />
+        id="cancelButton"
+        text="Cancel"
+        visible="false"
+        width="550"
+        height="50"
+        translation="[40, 195]"
+        background="0x2a2e40FF"
+        color="0xFFFFFFFF"
+        focusBackground="0x00A4DCFF"
+        focusColor="0xFFFFFFFF"
+        fontSize="24" />
+
+      <Text
+        id="errorMessage"
+        text=""
+        font="font:SmallestSystemFont"
+        color="#ff0000FF"
+        width="1120"
+        horizAlign="center"
+        translation="[40, 270]" />
     </Rectangle>
 
     <Text
@@ -100,7 +121,7 @@
       font="font:TinyBoldSystemFont"
       text="Moonfin version x.x.x"
       color="#CCCCCC"
-      translation="[844, 532]" />
+      translation="[844, 655]" />
   </children>
 
   <interface>
