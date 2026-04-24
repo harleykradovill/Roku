@@ -35,8 +35,7 @@
         translation="[40, 85]"
         width="1120"
         height="220"
-        color="0x00000000"
-        clippingRect="[0, 0, 1120, 220]">
+        color="0x00000000">
         <MarkupList
           id="serverPicker"
           translation="[0, 0]"
@@ -45,7 +44,7 @@
           focusFootprintBitmapUri=""
           itemSpacing="[0, 10]"
           itemSize="[1120, 100]"
-          numRows="2"
+          numRows="3"
           vertFocusAnimationStyle="floatingFocus" />
       </Rectangle>
 

@@ -8,6 +8,7 @@ sub init()
     m.top.optionsAvailable = false
     m.top.setFocus(true)
 
+    m.mainGroup = m.top.findNode("mainGroup")
     m.serverPicker = m.top.findNode("serverPicker")
     m.serverPickerContainer = m.top.findNode("serverPickerContainer")
     m.serverUrlTextbox = m.top.findNode("serverUrlTextbox")
@@ -45,6 +46,20 @@ sub init()
     m.cancelButton.focusBackground = "0x00A4DCFF"
     m.cancelButton.focusColor = "0xFFFFFFFF"
 
+    m.discoveredLabelY = 40
+    m.serverPickerY = 85
+    m.serverRowHeight = 100
+    m.serverRowSpacing = 10
+    m.maxVisibleRows = 3
+    m.gapBelowList = 15
+    m.addButtonHeight = 50
+    m.mainBottomPadding = 50
+    m.mainCenterY = 425
+    m.versionGap = 20
+    m.versionLabelBaseX = 844
+    m.manualMainY = 215
+    m.manualMainHeight = 420
+
     m.addServerButton.observeField("buttonSelected", "onAddServerButtonSelected")
     m.connectButton.observeField("buttonSelected", "onConnectButtonSelected")
     m.cancelButton.observeField("buttonSelected", "onCancelButtonSelected")
@@ -59,6 +74,49 @@ sub init()
     m.top.observeField("serverUrl", "clearErrorMessage")
 
     ScanForServers()
+end sub
+
+sub updateDiscoveredLayout()
+    total = getServerCount()
+    visibleRows = total
+    if visibleRows > m.maxVisibleRows then visibleRows = m.maxVisibleRows
+    if visibleRows < 0 then visibleRows = 0
+
+    listHeight = 0
+    if visibleRows > 0
+        listHeight = (visibleRows * m.serverRowHeight) + ((visibleRows - 1) * m.serverRowSpacing)
+    end if
+
+    rowsForNode = visibleRows
+    if rowsForNode < 1 then rowsForNode = 1
+    m.serverPicker.numRows = rowsForNode
+
+    m.serverPickerContainer.height = listHeight
+
+    addY = m.serverPickerY
+    if visibleRows > 0
+        addY = m.serverPickerY + listHeight + m.gapBelowList
+    end if
+    m.addServerButton.translation = [40, addY]
+
+    mainHeight = addY + m.addButtonHeight + m.mainBottomPadding
+    m.mainGroup.translation = [360, m.manualMainY]
+    m.mainGroup.height = mainHeight
+
+    if isValid(m.versionLabel)
+        m.versionLabel.translation = [m.versionLabelBaseX, m.manualMainY + mainHeight + m.versionGap]
+    end if
+
+    m.serverPickerContainer.visible = (visibleRows > 0)
+end sub
+
+sub applyManualLayout()
+    m.mainGroup.translation = [360, m.manualMainY]
+    m.mainGroup.height = m.manualMainHeight
+
+    if isValid(m.versionLabel)
+        m.versionLabel.translation = [m.versionLabelBaseX, 655]
+    end if
 end sub
 
 sub setDiscoveredMode()
@@ -82,6 +140,8 @@ sub setDiscoveredMode()
         m.addServerButton.setFocus(true)
         m.addServerButton.focus = true
     end if
+
+    updateDiscoveredLayout()
 end sub
 
 sub setManualMode()
@@ -306,12 +366,30 @@ sub ScanForServers()
     m.ssdpScanner.observeField("content", "ScanForServersComplete")
     m.ssdpScanner.control = TaskControl.RUN
     startLoadingSpinner(false)
+    updateDiscoveredLayout()
 end sub
 
 sub ScanForServersComplete(event)
     m.servers = event.getData()
     if not isValid(m.servers)
         m.servers = []
+    end if
+
+    debugFakeDiscovered = false
+    if debugFakeDiscovered
+        fakeA = {
+            name: "Fake Server A",
+            baseUrl: "http://192.168.1.101:8096",
+            iconUrl: "pkg:/images/jellyfin.png"
+        }
+        fakeB = {
+            name: "Fake Server B",
+            baseUrl: "http://192.168.1.102:8096",
+            iconUrl: "pkg:/images/jellyfin.png"
+        }
+
+        m.servers.push(fakeA)
+        m.servers.push(fakeB)
     end if
 
     items = createObject("roSGNode", "ServerData")
@@ -341,6 +419,7 @@ sub ScanForServersComplete(event)
     end if
 
     m.serverPicker.content = items
+    updateDiscoveredLayout()
     stopLoadingSpinner()
 
     if not m.isManualEntryMode
