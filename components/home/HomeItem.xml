@@ -5,7 +5,7 @@
       <Rectangle id="backdrop" width="180" height="270" translation="[0,0]" />
       <Poster id="itemIcon" width="80" height="80" translation="[50,95]" loadDisplayMode="scaleToFit" />
 
-      <MaskGroup id="posterMask" maskUri="pkg:/images/posterVertMask.png" maskSize="[180, 270]">
+      <MaskGroup id="posterMask">
         <Poster id="itemPoster" width="180" height="270" translation="[0,0]" loadDisplayMode="scaleToZoom" />
       </MaskGroup>
 
