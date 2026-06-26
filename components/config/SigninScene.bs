@@ -10,6 +10,12 @@ sub init()
 
     m.submit = m.top.findNode("submit")
     m.quickConnect = m.top.findNode("quickConnect")
+    m.passwordTab = m.top.findNode("passwordTab")
+    m.passwordTab.observeField("buttonSelected", "hideQuickConnect")
+    m.back = m.top.findNode("back")
+    m.back.observeField("buttonSelected", "onBackPressed")
+    m.passwordTab.background = "0x00A4DCFF"
+    m.quickConnect.background = "0x2a2e40FF"
 
     m.errorContainer = m.top.findNode("errorContainer")
     m.errorContainer.color = "#CC0000"
@@ -57,7 +63,7 @@ sub init()
     m.quickConnectTimer.observeField("fire", "quickConnectStatus")
 
     m.quickConnectGroup.visible = false
-    m.quickConnectBack.observeField("buttonSelected", "hideQuickConnect")
+    m.quickConnectBack.observeField("buttonSelected", "onBackPressed")
 
     initServerName()
 end sub
@@ -110,6 +116,9 @@ sub showQuickConnect()
     m.quickConnectGroup.visible = true
     m.quickConnectBack.setFocus(true)
 
+    m.quickConnect.background = "0x00A4DCFF"
+    m.passwordTab.background = "0x2a2e40FF"
+
     json = m.top.quickConnectJson
     if not isValid(json)
         m.top.alert = tr("Quick Connect not available.")
@@ -135,6 +144,9 @@ sub hideQuickConnect()
     m.top.showQuickConnect = false
     m.quickConnectGroup.visible = false
     m.top.findNode("signInFormContainer").visible = true
+
+    m.passwordTab.background = "0x00A4DCFF"
+    m.quickConnect.background = "0x2a2e40FF"
     
     m.submit.setFocus(true)
 end sub
@@ -166,16 +178,36 @@ sub onShowQuickConnect()
     showQuickConnect()
 end sub
 
+sub onBackPressed()
+    m.top.backPressed = true
+end sub
+
 function onKeyEvent(key as string, press as boolean) as boolean
     ' Returns true if user navigates to a new focusable element
     if not press then return false
 
     if m.quickConnectGroup.visible
         if key = KeyCode.BACK
-            hideQuickConnect()
+            m.top.backPressed = true
             return true
         end if
-        return false
+
+        if key = KeyCode.UP and m.quickConnectBack.hasFocus()
+            m.quickConnectBack.focus = false
+            m.quickConnect.setFocus(true)
+            m.quickConnect.focus = true
+            setLastFocus(m.quickConnect)
+            return true
+        end if
+
+        if key = KeyCode.DOWN and (m.quickConnect.hasFocus() or m.passwordTab.hasFocus())
+            if m.quickConnect.hasFocus() then m.quickConnect.focus = false
+            if m.passwordTab.hasFocus() then m.passwordTab.focus = false
+            m.quickConnectBack.setFocus(true)
+            m.quickConnectBack.focus = true
+            setLastFocus(m.quickConnectBack)
+            return true
+        end if
     end if
 
     list = m.top.findNode("configOptions")
@@ -188,7 +220,6 @@ function onKeyEvent(key as string, press as boolean) as boolean
 
     if key = KeyCode.DOWN and list.isInFocusChain()
         limit = list.content.getChildren(-1, 0).count() - 1
-
         if limit = list.itemFocused
             saveCredentials.setFocus(true)
             setLastFocus(saveCredentials)
@@ -200,22 +231,12 @@ function onKeyEvent(key as string, press as boolean) as boolean
     if key = KeyCode.DOWN and saveCredentials.isInFocusChain()
         m.submit.setFocus(true)
         m.submit.focus = true
-
         setLastFocus(m.submit)
         return true
     end if
 
     if key = KeyCode.UP and m.submit.hasFocus()
         m.submit.focus = false
-
-        saveCredentials.setFocus(true)
-        setLastFocus(saveCredentials)
-        return true
-    end if
-
-    if key = KeyCode.UP and m.quickConnect.hasFocus()
-        m.quickConnect.focus = false
-
         saveCredentials.setFocus(true)
         setLastFocus(saveCredentials)
         return true
@@ -227,22 +248,55 @@ function onKeyEvent(key as string, press as boolean) as boolean
         return true
     end if
 
-    if key = KeyCode.RIGHT and m.submit.hasFocus()
-        m.submit.focus = false
-
+    if key = KeyCode.UP and list.isInFocusChain()
         m.quickConnect.setFocus(true)
         m.quickConnect.focus = true
-
         setLastFocus(m.quickConnect)
         return true
     end if
 
-    if key = KeyCode.LEFT and m.quickConnect.hasFocus()
+    if key = KeyCode.DOWN and m.quickConnect.hasFocus()
         m.quickConnect.focus = false
+        list.setFocus(true)
+        setLastFocus(list)
+        return true
+    end if
 
+    if key = KeyCode.DOWN and m.passwordTab.hasFocus()
+        m.passwordTab.focus = false
+        list.setFocus(true)
+        setLastFocus(list)
+        return true
+    end if
+
+    if key = KeyCode.RIGHT and m.quickConnect.hasFocus()
+        m.quickConnect.focus = false
+        m.passwordTab.setFocus(true)
+        m.passwordTab.focus = true
+        setLastFocus(m.passwordTab)
+        return true
+    end if
+
+    if key = KeyCode.LEFT and m.passwordTab.hasFocus()
+        m.passwordTab.focus = false
+        m.quickConnect.setFocus(true)
+        m.quickConnect.focus = true
+        setLastFocus(m.quickConnect)
+        return true
+    end if
+
+    if key = KeyCode.LEFT and m.submit.hasFocus()
+        m.submit.focus = false
+        m.back.setFocus(true)
+        m.back.focus = true
+        setLastFocus(m.back)
+        return true
+    end if
+
+    if key = KeyCode.RIGHT and m.back.hasFocus()
+        m.back.focus = false
         m.submit.setFocus(true)
         m.submit.focus = true
-
         setLastFocus(m.submit)
         return true
     end if
