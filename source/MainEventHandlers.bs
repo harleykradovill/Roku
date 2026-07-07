@@ -282,18 +282,29 @@ end sub
 
 sub onDeepLinkingEvent(args)
     if not isValidAndNotEmpty(args) then return
-    if not isValidAndNotEmpty(args.mediaType) then return
-    if not isValidAndNotEmpty(args.contentId) then return
+    if GetInterface(args, "ifAssociativeArray") = invalid then return
+
+    mediaTypeValue = args.LookupCI("mediaType")
+    if not isValidAndNotEmpty(mediaTypeValue)
+        mediaTypeValue = args.LookupCI("contentType")
+    end if
+
+    contentId = args.LookupCI("contentId")
+    seriesId = args.LookupCI("seriesId")
+    collectionType = args.LookupCI("collectionType")
+
+    if not isValidAndNotEmpty(mediaTypeValue) then return
+    if not isValidAndNotEmpty(contentId) then return
 
     startLoadingSpinner()
     m.global.queueManager.callFunc("clear") ' empty queue/playlist
     m.global.queueManager.callFunc("resetShuffle") ' turn shuffle off
 
-    mediaType = LCase(args.mediaType)
+    mediaType = LCase(mediaTypeValue)
 
     if inArray([ItemType.EPISODE, ItemType.RECORDING, ItemType.MOVIE, ItemType.VIDEO], mediaType)
         quickplay.video({
-            id: args.contentId,
+            id: contentId,
             type: mediaType,
             json: {}
         })
@@ -303,7 +314,7 @@ sub onDeepLinkingEvent(args)
 
     if mediaType = ItemType.AUDIO
         quickplay.audio({
-            id: args.contentId,
+            id: contentId,
             type: mediaType
         })
         m.global.queueManager.callFunc("playQueue")
@@ -312,7 +323,7 @@ sub onDeepLinkingEvent(args)
 
     if mediaType = ItemType.AUDIOBOOK
         quickplay.audioBook({
-            id: args.contentId,
+            id: contentId,
             type: mediaType,
             json: {}
         })
@@ -322,7 +333,7 @@ sub onDeepLinkingEvent(args)
 
     if mediaType = ItemType.MUSICALBUM
         quickplay.album({
-            id: args.contentId,
+            id: contentId,
             type: mediaType
         })
         m.global.queueManager.callFunc("playQueue")
@@ -331,7 +342,7 @@ sub onDeepLinkingEvent(args)
 
     if mediaType = ItemType.MUSICARTIST
         quickplay.artist({
-            id: args.contentId,
+            id: contentId,
             type: mediaType
         })
         m.global.queueManager.callFunc("playQueue")
@@ -340,7 +351,7 @@ sub onDeepLinkingEvent(args)
 
     if mediaType = ItemType.SERIES
         quickplay.series({
-            id: args.contentId,
+            id: contentId,
             type: mediaType
         })
         m.global.queueManager.callFunc("playQueue")
@@ -348,12 +359,12 @@ sub onDeepLinkingEvent(args)
     end if
 
     if mediaType = ItemType.SEASON
-        if isValidAndNotEmpty(args.seriesID)
+        if isValidAndNotEmpty(seriesId)
             quickplay.season({
-                id: args.contentId,
+                id: contentId,
                 type: mediaType,
                 json: {
-                    SeriesId: args.seriesID
+                    SeriesId: seriesId
                 }
             })
             m.global.queueManager.callFunc("playQueue")
@@ -372,7 +383,7 @@ sub onDeepLinkingEvent(args)
 
     if mediaType = ItemType.BOXSET
         quickplay.boxset({
-            id: args.contentId,
+            id: contentId,
             type: mediaType
         })
         m.global.queueManager.callFunc("playQueue")
@@ -380,11 +391,11 @@ sub onDeepLinkingEvent(args)
     end if
 
     if mediaType = ItemType.COLLECTIONFOLDER
-        if isValidAndNotEmpty(args.collectionType)
+        if isValidAndNotEmpty(collectionType)
             quickplay.collectionFolder({
-                id: args.contentId,
+                id: contentId,
                 type: mediaType,
-                collectionType: LCase(args.collectionType)
+                collectionType: LCase(collectionType)
             })
             m.global.queueManager.callFunc("playQueue")
             return
@@ -402,7 +413,7 @@ sub onDeepLinkingEvent(args)
 
     if mediaType = ItemType.PLAYLIST
         quickplay.playlist({
-            id: args.contentId,
+            id: contentId,
             type: mediaType
         })
         m.global.queueManager.callFunc("playQueue")
@@ -410,11 +421,11 @@ sub onDeepLinkingEvent(args)
     end if
 
     if mediaType = ItemType.USERVIEW
-        if isValidAndNotEmpty(args.collectionType)
+        if isValidAndNotEmpty(collectionType)
             quickplay.userView({
-                id: args.contentId,
+                id: contentId,
                 type: mediaType,
-                collectionType: args.collectionType
+                collectionType: collectionType
             })
             m.global.queueManager.callFunc("playQueue")
             return
@@ -432,7 +443,7 @@ sub onDeepLinkingEvent(args)
 
     if mediaType = ItemType.FOLDER
         quickplay.folder({
-            id: args.contentId,
+            id: contentId,
             type: mediaType
         })
         m.global.queueManager.callFunc("playQueue")
@@ -441,7 +452,7 @@ sub onDeepLinkingEvent(args)
 
     if mediaType = ItemType.MUSICVIDEO
         quickplay.musicVideo({
-            id: args.contentId,
+            id: contentId,
             type: mediaType,
             json: {}
         })
@@ -451,7 +462,7 @@ sub onDeepLinkingEvent(args)
 
     if mediaType = ItemType.PERSON
         quickplay.person({
-            id: args.contentId,
+            id: contentId,
             type: mediaType
         })
         m.global.queueManager.callFunc("playQueue")
@@ -460,7 +471,7 @@ sub onDeepLinkingEvent(args)
 
     if mediaType = ItemType.TVCHANNEL
         quickplay.tvChannel({
-            id: args.contentId,
+            id: contentId,
             type: mediaType
         })
         m.global.queueManager.callFunc("playQueue")
@@ -469,7 +480,7 @@ sub onDeepLinkingEvent(args)
 
     if mediaType = ItemType.PROGRAM
         quickplay.program({
-            id: args.contentId,
+            id: contentId,
             type: mediaType,
             json: {
                 ChannelId: ""
@@ -481,7 +492,7 @@ sub onDeepLinkingEvent(args)
 
     if mediaType = ItemType.PHOTO
         photoContent = CreateObject("roSGNode", "ContentNode")
-        photoContent.id = args.contentId
+        photoContent.id = contentId
         quickplay.photo(photoContent)
         m.global.queueManager.callFunc("playQueue")
         return
@@ -489,7 +500,7 @@ sub onDeepLinkingEvent(args)
 
     if mediaType = ItemType.PHOTOALBUM
         quickplay.photoAlbum({
-            id: args.contentId,
+            id: contentId,
             type: mediaType
         })
         m.global.queueManager.callFunc("playQueue")
